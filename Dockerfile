@@ -1,12 +1,14 @@
 FROM node:18-alpine As development
 
-# Create app directory
 WORKDIR /usr/src/app
 
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
-# Copying this first prevents re-running npm install on every code change.
-COPY package*.json ./
+# If I don't install nest's cli the app won't start telling me nest was not found.
+RUN npm install -g @nestjs/cli 
 
-# Install app dependencies using the `npm ci` command instead of `npm install`
+COPY package.json package-lock.json .
+
+# Install all dependencies
 RUN npm install
+
+# package.json start script
+CMD [ "npm", "run", "start:dev"]
